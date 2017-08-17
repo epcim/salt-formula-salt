@@ -28,6 +28,11 @@ Salt master with reclass ENC metadata backend
 .. literalinclude:: tests/pillar/master_single_reclass.sls
    :language: yaml
 
+Salt master with multiple ext_pillars
+
+.. literalinclude:: tests/pillar/master_single_extpillars.sls
+   :language: yaml
+
 Salt master with API
 
 .. literalinclude:: tests/pillar/master_api.sls
@@ -162,6 +167,19 @@ Configure verbosity of state output (used for `salt` command)
     salt:
       master:
         state_output: changes
+
+Configure salt NACL module:
+
+.. code-block:: yaml
+
+    salt:
+      master:
+        nacl:
+          box_type: sealedbox
+          sk_file: /etc/salt/pki/master/nacl
+          pk_file: /etc/salt/pki/master/nacl.pub
+          #sk: None
+          #pk: None
 
 Salt synchronise node pillar and modules after start
 

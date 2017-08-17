@@ -21,6 +21,12 @@ default:
     files: /srv/salt/env
   pillar:
     engine: salt
+    reclass:
+      storage_type: yaml_fs
+      inventory_base_uri: /srv/salt/reclass
+      class_mappings:  {}
+      ignore_class_notfound: False
+      propagate_pillar_data_to_reclass: False
   max_event_size: 100000000
   minion_data_cache: 'localfs'
 {%- endload %}

@@ -118,6 +118,11 @@ suites:
         master_ssh_root.sls: tests/pillar/master_ssh_minion_root.sls
         master_formulas.sls: tests/pillar/master_formulas.sls
 
+  - name: master-extpill
+    provisioner:
+      pillars-from-files:
+        salt.sls: tests/pillar/master_single_extpillars.sls
+
   - name: control-default
     provisioner:
       grains:
