@@ -35,6 +35,37 @@ salt_minion_dependency_packages:
   - require:
     - {{ minion.install_state }}
 
+{#- Salt minion module additional configuration. Salt supports hundreds of modules, this formula pillar systematically structured #}
+{#- provides support for most frequently used modules. In order to provide additional support to configure whatever configuration #}
+{#- in ``minion.conf`` for any module without a need of dedicated formula dependency specify `salt:minion:config` pillar.         #}
+
+{#- If you intend add minion configuration for any existing salt-formula please use <formula repo>/<formula>/meta/salt.yml        #}
+
+{#- This pillar is expected be used while ``masterless``, ``salt --local``, to configure modules without support in salt-formula. #}
+{#- in salt state calls. It's not documented in README.rst as we recognize it a bad pattern for salt-formulas ecosystem. Example: #}
+{#-  salt:                      #}
+{#-    minion:                  #}
+{#-      config:                #}
+{#-        influxdb:            #}
+{#-          host: localhost    #}
+{#-          port: 8086         #}
+{#-        mysqlite:            #}
+{#-          driver: sqlite3    #}
+{%- if minion.config is mapping %}
+salt_minion_config_present:
+  file.serialize:
+  - name:            /etc/salt/minion.d/minion.conf
+  - dataset_pillar:  salt:minion:config
+  - formatter:       yaml
+  - merge_if_exists: True
+  - makedirs: True
+  - require:
+    - {{ minion.install_state }}
+  - require_in:
+    - service: {{ minion.service }}
+{%- endif %}
+
+
 {%- for service_name, service in pillar.items() %}
     {%- set support_fragment_file = service_name+'/meta/salt.yml' %}
     {%- macro load_support_file() %}{% include support_fragment_file ignore missing %}{% endmacro %}
